@@ -244,11 +244,10 @@ char* osdialog_prompt(osdialog_message_level level, const char* message, const c
 }
 
 
-static INT CALLBACK browseCallbackProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
-	(void) wParam;
 
-	if (message == BFFM_INITIALIZED) {
-		SendMessageW(hWnd, BFFM_SETEXPANDED, 1, lParam);
+static INT CALLBACK browseCallbackProc(HWND hWnd, UINT Msg, LPARAM lParam, LPARAM lpData) {
+	if (Msg == BFFM_INITIALIZED) {
+		SendMessageW(hWnd, BFFM_SETEXPANDED, 1, lpData);
 	}
 	return 0;
 }
@@ -297,7 +296,7 @@ char* osdialog_file(osdialog_file_action action, const char* dir, const char* fi
 		wchar_t strFile[MAX_PATH] = L"";
 		if (filename) {
 			wchar_t* filenameW = utf8_to_wchar(filename);
-			snwprintf(strFile, MAX_PATH, L"%S", filenameW);
+			wcsncpy_s(strFile, MAX_PATH, filenameW, _TRUNCATE);
 			OSDIALOG_FREE(filenameW);
 		}
 		ofn.lpstrFile = strFile;
